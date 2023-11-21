@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend 
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: server
+        image: cleverok2/frontend_demo:v0.0.1
+        env:
+        - name: PORT
+          value: "28000" 
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "productcatalog:28001"
+        - name: CURRENCY_SERVICE_ADDR
+          value: "currencyservice:28002"
+        - name: CART_SERVICE_ADDR
+          value: "cartservice:28003"
+        - name: RECOMMENDATION_SERVICE_ADDR
+          value: "recommendationservice:28004"
+        - name: CHECKOUT_SERVICE_ADDR
+          value: "checkoutservice:28005" 
+        - name: SHIPPING_SERVICE_ADDR
+          value: "shippingservice:28006"
+        - name: AD_SERVICE_ADDR
+          value: "adservice:28007"  
+        readinessProbe:
+          initialDelaySeconds: 10
+          httpGet:
+            path: "/_healthz"
+            port: 28000
+            httpHeaders:
+            - name: "Cookie"
+              value: "shop_session-id=x-readiness-probe"      
