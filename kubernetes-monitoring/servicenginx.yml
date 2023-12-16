@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-mon
+  namespace: monitoring
+  labels:
+    app: nginx-mon
+spec:
+  ports:
+  - port: 80
+    name: web
+    protocol: TCP
+  - port: 9113
+    name: exporter
+    protocol: TCP
+  selector:
+    app: nginx-mon
