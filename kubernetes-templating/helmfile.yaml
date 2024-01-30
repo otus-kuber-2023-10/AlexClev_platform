@@ -1,0 +1,37 @@
+---
+repositories:
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: harbor
+    url: https://helm.goharbor.io
+
+   
+
+releases:
+  - name: "ingress-nginx"
+    chart: ingress-nginx/ingress-nginx
+    namespace: "ingress-nginx"
+    createNamespace: true
+    installed: true
+  - name: "cert-manager"
+    chart: jetstack/cert-manager
+    namespace: "cert-manager"
+    createNamespace: true
+    installed: true
+    version: v1.13.1
+    hooks:
+    # This hook adds the CRDs
+    - events: ["presync"]
+      showlogs: true
+      command: "/bin/sh"
+      args: ["-c", "kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.13.1/cert-manager.crds.yaml"]
+  - name: "harbor"
+    chart: harbor/harbor
+    namespace: "harbor"
+    createNamespace: true
+    installed: true
+    version: 1.13.0
+    values:
+      - ../harbor/values.yaml

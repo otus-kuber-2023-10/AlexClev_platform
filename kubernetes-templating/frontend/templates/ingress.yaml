@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/acme-challenge-type: http01
+    cert-manager.io/cluster-issuer: otus-clusterissuer
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: shop.158.160.142.165.nip.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - shop.158.160.142.165.nip.io
+    secretName: frontend-tls

@@ -1,0 +1,28 @@
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    certSource: secret
+    auto:
+      commonName: ""
+    secret:
+      secretName: harbor.tls
+
+  ingress:
+    hosts:
+      core: harbor.158.160.142.165.nip.io
+    controller: nginx
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: "otus-clusterissuer"
+      cert-manager.io/acme-challenge-type: http01
+    harbor:
+      annotations: {}
+      labels: {}
+
+externalURL: https://harbor.158.160.142.165.nip.io
+
+notary:
+  enabled: false
+
