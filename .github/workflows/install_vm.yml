@@ -1,0 +1,64 @@
+name: create yandex cluster vm
+
+on:
+  workflow_dispatch
+#  push:
+    # при создании pull request на main
+#    branches: [ main ]
+
+jobs:
+  create_cluster:
+    runs-on: ubuntu-latest
+    env:
+      ya_vm_name: testmachine
+      ya_vm_image: ubuntu-2004-lts
+      ya_network-name: default
+      ya_zone: ru-central1-b
+      ya_subnet: default-ru-central1-b
+      ya_account: ${{ secrets.YA_ACCOUNT_prod }}
+      ya_cloud_id: b1gi91nvj5m7ajci95v9
+      ya_folder_id: b1g2fitjlfgjp12no5tv
+
+   
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name:  install yandex cli
+        uses: nightstory/setup-yc@v1
+        with:
+          enable-cache: true
+
+      - run: 'echo "$YA_KEY" > key.json'
+        shell: bash
+        env:
+          YA_KEY: ${{ secrets.YC_SA_prod }}
+    
+      - name: set yandex env
+        run: |
+          yc config set cloud-id ${{ env.ya_cloud_id }}
+          yc config set folder-id ${{ env.ya_folder_id }}
+          yc config set service-account-key key.json
+   
+      - name: Create master 
+        run: |
+          yc compute instance create ${{ env.ya_vm_name }} \
+          --network-name ${{ env.ya_network-name }} \
+          --zone ${{ env.ya_zone }} \
+          --network-interface subnet-name=${{ env.ya_subnet }},nat-ip-version=ipv4 \
+          --create-boot-disk type=network-hdd,size=5,image-folder-id=standard-images,image-family=${{ env.ya_vm_image }} \
+          --metadata ssh-keys="${{ secrets.YC_SSH_KEY_prod }}" \ \
+          --memory 8GB \
+          --cores 2 \
+          --core-fraction 20 \
+          --platform-id standard-v3 \
+          --preemptible \
+  
+
+ 
+
+
+
+
+
+          
