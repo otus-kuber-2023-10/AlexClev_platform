@@ -1,0 +1,40 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: csi-hostpath-sc
+provisioner: hostpath.csi.k8s.io
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100M
+  storageClassName: csi-hostpath-sc 
+
+---
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: storage-pod
+spec:
+  containers:
+    - name: test-csi-pod
+      image: nginx
+      volumeMounts:
+      - mountPath: "/data"
+        name: csi-volume
+  volumes:
+    - name: csi-volume
+      persistentVolumeClaim:
+        claimName: storage-pvc 
