@@ -1,0 +1,27 @@
+server:
+  image:
+    repository: cr.yandex/yc/vault
+    tag: latest
+  volumes:
+  - name: vault-unseal-sa-key
+    secret:
+      secretName: vault-unseal-sa-key
+  volumeMounts:
+  - name: vault-unseal-sa-key
+    readOnly: true
+    mountPath: /tmp/vault-unseal
+  ingress:
+    enabled: true
+    activeService: false
+    ingressClassName: nginx
+    hosts:
+    - host: vault.local
+    tls:
+    - hosts:
+      - vault.local
+  standalone:
+    enabled: false
+  ha:
+    enabled: true
+ui:
+  enabled: true
