@@ -1,0 +1,71 @@
+stages:
+- build_docker
+
+include:
+  - local: ci-templates/build_push_image.yml
+
+build_adservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: adservice
+    DIR: src/${SERVICE}
+
+build_cartservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: cartservice
+    DIR: src/${SERVICE}/src
+
+build_checkoutservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: checkoutservice
+    DIR: src/${SERVICE}
+
+build_currencyservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: currencyservice
+    DIR: src/${SERVICE}
+
+build_emailservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: emailservice
+    DIR: src/${SERVICE}
+
+build_frontend:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: frontend
+    DIR: src/${SERVICE}
+
+build_loadgenerator:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: loadgenerator
+    DIR: src/${SERVICE}
+
+build_and_push_paymentservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: paymentservice
+    DIR: src/${SERVICE}
+
+build_productcatalogservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: productcatalogservice
+    DIR: src/${SERVICE}
+
+build_recommendationservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: recommendationservice
+    DIR: src/${SERVICE}
+
+build_shippingservice:
+  extends: .build_push_docker_image
+  variables:
+    SERVICE: shippingservice
+    DIR: src/${SERVICE}

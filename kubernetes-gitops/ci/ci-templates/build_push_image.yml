@@ -1,0 +1,14 @@
+
+.build_push_docker_image:
+  stage: build_docker
+  image: docker:24.0.5
+  services:
+  - docker:24.0.5-dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/$SERVICE:v0.0.1
+    DOCKER_TLS_CERTDIR: ""
+  script:
+  - cd $CI_PROJECT_DIR/$DIR
+  - echo $CI_REGISTRY_PASSWORD | docker login  $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  - docker build -t $IMAGE_TAG .
+  - docker push $IMAGE_TAG
